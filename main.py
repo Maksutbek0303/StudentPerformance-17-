@@ -10,12 +10,14 @@ scaler = joblib.load('scaler (1).pkl')
 class StudentSchema(BaseModel):
     gender: str
     race_ethnicity: str
-    parent_education: str
+    parental_level_of_education: str
     lunch: str
     test_preparation: str
     match_score: int
     reading_score: int
 
+race_ethnicity_list = ['group B', 'group C', 'group D', 'group E']
+parental_education_list = ["bachelor's degree", 'high school', "master's degree", 'some college', 'some high school']
 
 @student_app.post('/predict/')
 async def predict(student: StudentSchema):
@@ -29,20 +31,13 @@ async def predict(student: StudentSchema):
 
     new_race = student_dict.pop('race_ethnicity')
     race1or_0 = [
-        1 if new_race == 'group B' else 0,
-        1 if new_race == 'group C' else 0,
-        1 if new_race == 'group D' else 0,
-        1 if new_race == 'group E' else 0
+        1 if new_race == i else 0 for i in race_ethnicity_list
 
     ]
 
-    new_parent = student_dict.pop('parent_education')
+    new_parent = student_dict.pop('parental_level_of_education')
     parent1_0 = [
-        1 if new_parent == "bachelor's degree" else 0,
-        1 if new_parent == 'high school' else 0,
-        1 if new_parent == "master's degree" else 0,
-        1 if new_parent == 'some college' else 0,
-        1 if new_parent == 'some high school' else 0
+        1 if new_parent == i else 0 for i in parental_education_list
 
     ]
 
